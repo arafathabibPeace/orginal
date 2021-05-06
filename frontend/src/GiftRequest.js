@@ -74,12 +74,11 @@ function GiftRequest() {
                     variant="outlined"
                     helperText='Required*'
                     onChange={event => setUsername(event.target.value)}
-                  //onChange={event => setClient({ username: event.target.value })}
                   />
                 </div>
                 <div>
                   <TextField
-                    id="standard-multiline-static"
+                    id="outlined-required"
                     placeholder="Gift!"
                     label="What do you want for christmas?"
                     variant="outlined"
@@ -87,7 +86,6 @@ function GiftRequest() {
                     multiline
                     helperText='Required*'
                     onChange={event => setWish(event.target.value)}
-                  //onChange={event => setClient({ wish: event.target.value })}
                   />
                 </div>
                 <div>
@@ -112,6 +110,7 @@ function GiftRequest() {
                   <p>Other Info:</p>
                   <p>Age:{res.age}</p>
                   <p>Birthdate: {res.birthdate}</p>
+                  <p>Wish(es): {res.wish}</p>
                 </DialogContentText>
               </DialogContent>
 

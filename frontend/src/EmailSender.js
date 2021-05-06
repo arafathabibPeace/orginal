@@ -19,7 +19,7 @@ function EmailSender() {
     const classes = useStyles();
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post(`http://localhost:3000/replyLetter`)
+        axios.get(`http://localhost:3000/replyLetter`)
             .then((res) => console.log('Response: ', res))
             .catch((error) => { console.log('Error:', error) })
 

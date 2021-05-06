@@ -75,11 +75,82 @@ app.post("/sendlettertoSanta", (req, res) => {
 
 });
 
-app.post("/replyLetter", (req, res) => {
-  sendEmail();
+app.get("/replyLetter", (req, res) => {
+
+  const emailTemplate = (username, address) => {
+
+    // Generate SMTP service account from ethereal.email
+    nodemailer.createTestAccount((err, account) => {
+      if (err) {
+        console.error('Failed to create a testing account. ' + err.message);
+        return process.exit(1);
+      }
+
+      console.log('Credentials obtained, sending message...');
+
+      // Create a SMTP transporter object
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        auth: {
+          user: 'vicente.beer@ethereal.email',
+          pass: 'PtMUBdxyq9qUSU5yhZ'
+        }
+      });
+
+      // Message object
+      let message = {
+        from: 'do_not_reply@northpole.com',
+        to: 'santa@northpole.com',
+        subject: 'Nodemailer is unicode friendly ✔',
+        text: 'Username: ' + username + '\nAddress: ' + address,
+        html: '<p><b>Hello</b> ' + username + '!</p> ' + address
+      };
+
+      transporter.sendMail(message, (err, info) => {
+        if (err) {
+          console.log('Error occurred. ' + err.message);
+          return process.exit(1);
+        }
+        const count = 1;
+        const messageInfo = info.messageId;
+        const previewURL = nodemailer.getTestMessageUrl(info);
+        const emailInfo = {count,messageInfo, previewURL};
+
+        console.log('Message sent: %s', messageInfo);
+        // Preview only available when sending through an Ethereal account
+        console.log('Preview URL: %s', previewURL);
+
+        return res.status(200).json(emailInfo);
+        //res.setHeader('Content-Type', 'text/html');
+        //return res.writeContinue('<a href="'+previewURL+'">Preview URL</a>');
+        //response.setHeader('Content-Type', 'application/json');
+        //return res.writeContinue(emailInfo);
+        count++;
+      });
+    });
+  }
+
+  const mapUsernames = () => {
+    usernames.map(user => {
+      userProfiles.map(profile => {
+        const isUidMatch = profile.userUid === user.uid;
+        if (isUidMatch) {
+          return emailTemplate(user.username, profile.address);
+        }
+      })
+    })
+  }
+
+  setInterval(mapUsernames, 15 * 1000);
+
+
+  
+
   
 });
 
+/*
 sendEmail = () => {
   setInterval(mapUsernames, 15 * 1000);
 }
@@ -129,7 +200,6 @@ emailTemplate = (username, address) => {
         console.log('Error occurred. ' + err.message);
         return process.exit(1);
       }
-      return message;
 
       console.log('Message sent: %s', info.messageId);
       // Preview only available when sending through an Ethereal account
@@ -137,6 +207,7 @@ emailTemplate = (username, address) => {
     });
   });
 }
+*/
 
 const PORT = process.env.PORT || 3000;
 

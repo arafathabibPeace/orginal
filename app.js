@@ -72,7 +72,7 @@ app.post("/sendlettertoSanta", (req, res) => {
 
   data = { username: username, birthdate: birthdate, age: age, wish: wish, message: message };
   return res.json({ data: data });
-
+  res.end();
 });
 
 app.get("/replyLetter", (req, res) => {

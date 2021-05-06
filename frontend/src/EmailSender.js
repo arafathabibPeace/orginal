@@ -17,15 +17,15 @@ const useStyles = makeStyles((theme) => ({
 
 function EmailSender() {
     const classes = useStyles();
-    const [notification, setNotification] = useState('');
-    const [previewURL, setPreviewURL] = useState('');
+    const url =  localStorage.getItem('previewURL');
+    const [previewURL, setPreviewURL] = useState(url);
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.get(`http://localhost:3000/replyLetter`)
             .then((res) => {
                 console.log('Response: ', res.data);
-                setNotification('Emails has been sent here is preview URL');
                 setPreviewURL(res.data.previewURL);
+                localStorage.setItem('previewURL', res.data.previewURL)
             })
             .catch((error) => { console.log('Error:', error) })
 
@@ -37,8 +37,7 @@ function EmailSender() {
                     Activate Email Sender
                 </Button>
             </form>
-            <h1>{notification}</h1>
-            <h4>{previewURL === '' ? '' : <a href={previewURL}>Preview Email</a>}</h4>
+            <h4>{previewURL === '' ? '' : <a href={previewURL} target="_blank">Preview Email</a>}</h4>
         </div>
 
     )
